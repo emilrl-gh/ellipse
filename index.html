@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ellipse</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Ellipse</h1>
+            <p>Explore different quadric surfaces: Ax² + By² + Cz² + D = 0</p>
+            <div class="nav-buttons">
+                <button id="visualizer-btn" class="nav-btn active">Visualizer</button>
+                <button id="quiz-btn" class="nav-btn">Quiz Mode</button>
+            </div>
+        </header>
+
+        <div class="equation-card">
+            <div class="equation-info">
+                <div class="equation-display-main">
+                    <h3>Current Equation</h3>
+                    <div id="equation-text-main">1x² + 1y² + 1z² - 1 = 0</div>
+                </div>
+                <div class="surface-type-main">
+                    <h3>Surface Type</h3>
+                    <div id="surface-type-main">Sphere</div>
+                    <div id="surface-description-main">A perfectly round surface where all points are equidistant from the center.</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="visualizer-page" class="page-content">
+            <div class="main-content">
+            <div class="controls-panel">
+                <div class="parameters">
+                    <h3>Parameters</h3>
+
+                    <div class="parameter-group">
+                        <label for="paramA">A: <span id="valueA" class="editable-value" title="Double-click to edit">1</span></label>
+                        <input type="range" id="paramA" min="-5" max="5" step="0.1" value="1">
+                    </div>
+
+                    <div class="parameter-group">
+                        <label for="paramB">B: <span id="valueB" class="editable-value" title="Double-click to edit">1</span></label>
+                        <input type="range" id="paramB" min="-5" max="5" step="0.1" value="1">
+                    </div>
+
+                    <div class="parameter-group">
+                        <label for="paramC">C: <span id="valueC" class="editable-value" title="Double-click to edit">1</span></label>
+                        <input type="range" id="paramC" min="-5" max="5" step="0.1" value="1">
+                    </div>
+
+                    <div class="parameter-group">
+                        <label for="paramD">D: <span id="valueD" class="editable-value" title="Double-click to edit">-1</span></label>
+                        <input type="range" id="paramD" min="-5" max="5" step="0.1" value="-1">
+                    </div>
+                </div>
+
+                <div class="presets">
+                    <h3>Surface Presets</h3>
+                    <button class="preset-btn" data-preset="sphere">Sphere</button>
+                    <button class="preset-btn" data-preset="ellipsoid">Ellipsoid</button>
+                    <button class="preset-btn" data-preset="one-sheet">One-Sheet Hyperboloid</button>
+                    <button class="preset-btn" data-preset="two-sheet">Two-Sheet Hyperboloid</button>
+                    <button class="preset-btn" data-preset="cone">Elliptic Cone</button>
+                    <button class="preset-btn" data-preset="cylinder">Elliptic Cylinder</button>
+                </div>
+
+                <div class="cheat-sheet-section">
+                    <button id="cheat-sheet-btn" class="cheat-sheet-btn">📋 Cheat Sheet</button>
+                </div>
+            </div>
+
+            <div class="plot-container">
+                <div id="plot" style="width: 100%; height: 600px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="quiz-page" class="page-content hidden">
+            <div class="quiz-content">
+                <div class="quiz-header">
+                    <h2>Quadric Surface Quiz</h2>
+                    <p>Identify the type of quadric surface from the equation</p>
+                </div>
+
+                <div class="quiz-card">
+                    <div class="quiz-equation">
+                        <h3>What type of surface is this equation?</h3>
+                        <div id="quiz-equation-text"></div>
+                    </div>
+
+                    <div class="quiz-options">
+                        <button class="quiz-option" data-answer="sphere">Sphere</button>
+                        <button class="quiz-option" data-answer="ellipsoid">Ellipsoid</button>
+                        <button class="quiz-option" data-answer="one-sheet">One-Sheet Hyperboloid</button>
+                        <button class="quiz-option" data-answer="two-sheet">Two-Sheet Hyperboloid</button>
+                        <button class="quiz-option" data-answer="cone">Elliptic Cone</button>
+                        <button class="quiz-option" data-answer="cylinder">Elliptic Cylinder</button>
+                    </div>
+
+                    <div class="quiz-feedback hidden">
+                        <div id="quiz-result"></div>
+                        <div id="quiz-explanation"></div>
+                        <div id="quiz-visualization" class="quiz-viz hidden">
+                            <div id="quiz-plot" style="width: 100%; height: 300px; background: #f8fafc;"></div>
+                        </div>
+                        <button id="next-question-btn">Next Question</button>
+                    </div>
+
+                    <div class="quiz-stats">
+                        <div class="stat">
+                            <span class="stat-label">Score:</span>
+                            <span id="quiz-score">0/0</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Streak:</span>
+                            <span id="quiz-streak">0</span>
+                            <span id="streak-fire" class="streak-fire"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cheat Sheet Modal -->
+        <div id="cheat-sheet-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>📋 Quadric Surface Cheat Sheet</h2>
+                    <button id="close-modal" class="close-btn">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="surface-guide">
+                        <div class="surface-item">
+                            <h3>🔴 Sphere</h3>
+                            <div class="surface-formula">A = B = C > 0, D < 0</div>
+                            <div class="surface-example">Example: x² + y² + z² - 4 = 0</div>
+                            <div class="surface-desc">All coefficients equal and positive, constant negative</div>
+                        </div>
+
+                        <div class="surface-item">
+                            <h3>🥚 Ellipsoid</h3>
+                            <div class="surface-formula">A, B, C > 0 (different values), D < 0</div>
+                            <div class="surface-example">Example: 2x² + y² + 3z² - 6 = 0</div>
+                            <div class="surface-desc">All coefficients positive but different, constant negative</div>
+                        </div>
+
+                        <div class="surface-item">
+                            <h3>⏳ One-Sheet Hyperboloid</h3>
+                            <div class="surface-formula">2 positive, 1 negative, D < 0</div>
+                            <div class="surface-example">Example: x² + y² - z² - 1 = 0</div>
+                            <div class="surface-desc">Two coefficients positive, one negative, constant negative</div>
+                        </div>
+
+                        <div class="surface-item">
+                            <h3>⧗ Two-Sheet Hyperboloid</h3>
+                            <div class="surface-formula">A, B, C > 0, D > 0 OR 2 negative, 1 positive, D < 0</div>
+                            <div class="surface-example">Example: x² + y² + z² + 1 = 0 or -x² - y² + z² - 1 = 0</div>
+                            <div class="surface-desc">All positive with positive constant, or two negative with one positive</div>
+                        </div>
+
+                        <div class="surface-item">
+                            <h3>🍦 Elliptic Cone</h3>
+                            <div class="surface-formula">2 positive, 1 negative, D = 0</div>
+                            <div class="surface-example">Example: x² + y² - z² = 0</div>
+                            <div class="surface-desc">Two coefficients positive, one negative, constant is zero</div>
+                        </div>
+
+                        <div class="surface-item">
+                            <h3>🥒 Elliptic Cylinder</h3>
+                            <div class="surface-formula">1 coefficient = 0, others > 0, D < 0</div>
+                            <div class="surface-example">Example: x² + y² - 4 = 0 (no z term)</div>
+                            <div class="surface-desc">One coefficient is zero, others positive, constant negative</div>
+                        </div>
+                    </div>
+
+                    <div class="quick-tips">
+                        <h3>🎯 Quick Classification Tips</h3>
+                        <ul>
+                            <li><strong>Count signs:</strong> How many positive vs negative coefficients?</li>
+                            <li><strong>Check D:</strong> Is the constant positive, negative, or zero?</li>
+                            <li><strong>Look for zeros:</strong> Any missing variables create cylinders or paraboloids</li>
+                            <li><strong>Equal coefficients:</strong> Same positive values usually mean sphere</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="quiz.js"></script>
+</body>
+</html>
