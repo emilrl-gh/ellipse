@@ -217,6 +217,17 @@ class QuadricSurfaceQuiz {
             document.getElementById('quiz-equation-text').textContent = equation;
             document.querySelector('.quiz-feedback').classList.add('hidden');
 
+            // Clear previous result/explanation text and classes
+            const resultEl = document.getElementById('quiz-result');
+            if (resultEl) {
+                resultEl.textContent = '';
+                resultEl.className = '';
+            }
+            const explanationEl = document.getElementById('quiz-explanation');
+            if (explanationEl) {
+                explanationEl.textContent = '';
+            }
+
             // Clear and hide visualization
             const vizElement = document.getElementById('quiz-visualization');
             vizElement.classList.add('hidden');
@@ -252,6 +263,17 @@ class QuadricSurfaceQuiz {
             // Update content while hidden
             equationElement.textContent = equation;
             feedbackElement.classList.add('hidden');
+
+            // Clear previous result/explanation text and classes
+            const resultEl = document.getElementById('quiz-result');
+            if (resultEl) {
+                resultEl.textContent = '';
+                resultEl.className = '';
+            }
+            const explanationEl = document.getElementById('quiz-explanation');
+            if (explanationEl) {
+                explanationEl.textContent = '';
+            }
 
             // Clear and hide visualization
             const vizElement = document.getElementById('quiz-visualization');
