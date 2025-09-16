@@ -45,6 +45,10 @@ class QuadricSurfaceQuiz {
         document.getElementById('quiz-btn').addEventListener('click', () => {
             this.showQuizPage();
         });
+
+        document.getElementById('cheat-sheet-btn-quiz').addEventListener('click', () => {
+            document.getElementById('cheat-sheet-modal').classList.remove('hidden');
+        });
     }
 
     showVisualizerPage() {

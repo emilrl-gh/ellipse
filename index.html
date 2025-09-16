@@ -9,12 +9,13 @@
 </head>
 <body>
     <div class="container">
-        <header>
+        <header class="header-responsive">
             <h1>Ellipse</h1>
-            <p>Explore different quadric surfaces: Ax² + By² + Cz² + D = 0</p>
-            <div class="nav-buttons">
+            <p class="header-description">Explore different quadric surfaces: Ax² + By² + Cz² + D = 0</p>
+            <div class="nav-buttons nav-responsive">
                 <button id="visualizer-btn" class="nav-btn active">Visualizer</button>
                 <button id="quiz-btn" class="nav-btn">Quiz Mode</button>
+                <button id="cheat-sheet-btn-header" class="nav-btn cheat-sheet-nav">📋 Cheat Sheet</button>
             </div>
         </header>
 
@@ -33,8 +34,8 @@
         </div>
 
         <div id="visualizer-page" class="page-content">
-            <div class="main-content">
-            <div class="controls-panel">
+            <div class="main-content responsive-layout">
+                <div class="controls-panel mobile-full-width">
                 <div class="parameters">
                     <h3>Parameters</h3>
 
@@ -69,13 +70,10 @@
                     <button class="preset-btn" data-preset="cylinder">Elliptic Cylinder</button>
                 </div>
 
-                <div class="cheat-sheet-section">
-                    <button id="cheat-sheet-btn" class="cheat-sheet-btn">📋 Cheat Sheet</button>
-                </div>
             </div>
 
-            <div class="plot-container">
-                <div id="plot" style="width: 100%; height: 600px;"></div>
+                <div class="plot-container responsive-plot">
+                    <div id="plot" class="plot-responsive"></div>
                 </div>
             </div>
         </div>
@@ -83,8 +81,7 @@
         <div id="quiz-page" class="page-content hidden">
             <div class="quiz-content">
                 <div class="quiz-header">
-                    <h2>Quadric Surface Quiz</h2>
-                    <p>Identify the type of quadric surface from the equation</p>
+                    <button id="cheat-sheet-btn-quiz" class="cheat-sheet-quiz-btn">📋 Need Help? View Cheat Sheet</button>
                 </div>
 
                 <div class="quiz-card">

@@ -14,7 +14,9 @@ body {
 .container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 15px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 header {
@@ -64,6 +66,17 @@ header p {
     background: rgba(255, 255, 255, 0.9);
     color: #4a5568;
     border-color: rgba(255, 255, 255, 0.9);
+}
+
+.cheat-sheet-nav {
+    background: rgba(56, 178, 172, 0.2) !important;
+    border-color: rgba(56, 178, 172, 0.5) !important;
+    color: white !important;
+}
+
+.cheat-sheet-nav:hover {
+    background: rgba(56, 178, 172, 0.4) !important;
+    border-color: rgba(56, 178, 172, 0.7) !important;
 }
 
 .equation-card {
@@ -129,11 +142,12 @@ header p {
     display: none;
 }
 
-.main-content {
+.main-content.responsive-layout {
     display: grid;
-    grid-template-columns: 350px 1fr;
-    gap: 30px;
-    height: 700px;
+    grid-template-columns: 320px 1fr;
+    gap: 20px;
+    min-height: 600px;
+    height: auto;
 }
 
 .controls-panel {
@@ -267,58 +281,104 @@ header p {
     line-height: 1.4;
 }
 
-.plot-container {
+.plot-container.responsive-plot {
     background: rgba(255, 255, 255, 0.95);
     border-radius: 15px;
-    padding: 20px;
+    padding: 15px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     backdrop-filter: blur(10px);
+    min-height: 500px;
 }
 
-#plot {
+.plot-responsive {
+    width: 100%;
+    height: 600px;
     border-radius: 10px;
     overflow: hidden;
 }
 
-@media (max-width: 1200px) {
-    .main-content {
-        grid-template-columns: 1fr;
-        height: auto;
+/* Responsive Navigation */
+@media (max-width: 768px) {
+    .nav-responsive {
+        flex-direction: column;
+        gap: 8px;
     }
 
-    .controls-panel {
-        order: 2;
+    .nav-btn {
+        font-size: 0.9em;
+        padding: 8px 16px;
     }
 
-    .plot-container {
-        order: 1;
-        height: 500px;
+    .header-description {
+        font-size: 1em;
+        margin-bottom: 15px;
     }
 }
 
+/* Tablet responsiveness */
+@media (max-width: 1200px) {
+    .main-content.responsive-layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .mobile-full-width {
+        order: 2;
+        width: 100%;
+    }
+
+    .responsive-plot {
+        order: 1;
+        min-height: 400px;
+    }
+
+    .plot-responsive {
+        height: 450px;
+    }
+}
+
+/* Mobile responsiveness */
 @media (max-width: 768px) {
     .container {
         padding: 10px;
-    }
-
-    header h1 {
-        font-size: 2em;
-    }
-
-    .controls-panel {
-        padding: 20px;
-    }
-
-    .plot-container {
-        padding: 15px;
-        height: 400px;
     }
 
     .equation-info {
         grid-template-columns: 1fr;
         gap: 15px;
     }
+
+    .main-content.responsive-layout {
+        gap: 15px;
+    }
+
+    .controls-panel {
+        padding: 20px 15px;
+    }
+
+    .plot-responsive {
+        height: 350px;
+    }
+
+    .responsive-plot {
+        padding: 10px;
+        min-height: 320px;
+    }
+
+    header h1 {
+        font-size: 2em;
+    }
+
+    .quiz-content {
+        padding: 0;
+    }
+
+    .quiz-card {
+        margin: 10px;
+        padding: 20px 15px;
+    }
 }
+
 
 .quiz-content {
     max-width: 800px;
@@ -340,6 +400,25 @@ header p {
 .quiz-header p {
     font-size: 1.1em;
     opacity: 0.9;
+    margin-bottom: 15px;
+}
+
+.cheat-sheet-quiz-btn {
+    background: rgba(56, 178, 172, 0.1);
+    border: 2px solid rgba(56, 178, 172, 0.3);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.cheat-sheet-quiz-btn:hover {
+    background: rgba(56, 178, 172, 0.2);
+    border-color: rgba(56, 178, 172, 0.5);
+    transform: translateY(-2px);
 }
 
 .quiz-card {
@@ -562,29 +641,6 @@ header p {
     border-color: #667eea;
 }
 
-.cheat-sheet-section {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 2px solid #e2e8f0;
-}
-
-.cheat-sheet-btn {
-    width: 100%;
-    padding: 12px 15px;
-    background: linear-gradient(135deg, #38b2ac 0%, #319795 100%);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1em;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.cheat-sheet-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(56, 178, 172, 0.4);
-}
 
 .streak-fire {
     margin-left: 5px;

@@ -39,7 +39,7 @@ class QuadricSurfaceVisualizer {
             });
         });
 
-        document.getElementById('cheat-sheet-btn').addEventListener('click', () => {
+        document.getElementById('cheat-sheet-btn-header').addEventListener('click', () => {
             document.getElementById('cheat-sheet-modal').classList.remove('hidden');
         });
 
