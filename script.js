@@ -1,6 +1,7 @@
 class QuadricSurfaceVisualizer {
     constructor() {
         this.params = { A: 1, B: 1, C: 1, D: -1 };
+        this.previousParams = { A: 1, B: 1, C: 1 };
         this.resolution = 25;
         this.plotExists = false;
         this.plotUpdateTimeout = null;
@@ -52,6 +53,43 @@ class QuadricSurfaceVisualizer {
             if (e.target.id === 'cheat-sheet-modal') {
                 document.getElementById('cheat-sheet-modal').classList.add('hidden');
             }
+        });
+
+        // Include toggles for A, B, C
+        const includeMap = [
+            { checkboxId: 'includeA', paramKey: 'A', sliderId: 'paramA', valueId: 'valueA' },
+            { checkboxId: 'includeB', paramKey: 'B', sliderId: 'paramB', valueId: 'valueB' },
+            { checkboxId: 'includeC', paramKey: 'C', sliderId: 'paramC', valueId: 'valueC' }
+        ];
+
+        includeMap.forEach(({ checkboxId, paramKey, sliderId, valueId }) => {
+            const checkbox = document.getElementById(checkboxId);
+            const slider = document.getElementById(sliderId);
+            const valueSpan = document.getElementById(valueId);
+
+            if (!checkbox || !slider || !valueSpan) return;
+
+            checkbox.addEventListener('change', () => {
+                if (!checkbox.checked) {
+                    // Store previous value and zero out
+                    this.previousParams[paramKey] = this.params[paramKey];
+                    this.params[paramKey] = 0;
+                    slider.disabled = true;
+                    slider.value = 0;
+                    valueSpan.textContent = this.formatDisplayValue(0);
+                } else {
+                    // Restore previous value (fallback to 1 if missing)
+                    const restored = (typeof this.previousParams[paramKey] === 'number') ? this.previousParams[paramKey] : 1;
+                    this.params[paramKey] = restored;
+                    slider.disabled = false;
+                    slider.value = restored;
+                    valueSpan.textContent = this.formatDisplayValue(restored);
+                }
+
+                this.updateEquationDisplay();
+                this.updatePlot();
+                this.updateSurfaceInfo();
+            });
         });
     }
 
@@ -498,6 +536,14 @@ class QuadricSurfaceVisualizer {
         document.getElementById('valueB').textContent = this.formatDisplayValue(this.params.B);
         document.getElementById('valueC').textContent = this.formatDisplayValue(this.params.C);
         document.getElementById('valueD').textContent = this.formatDisplayValue(this.params.D);
+
+        // Respect include toggles when updating sliders
+        const includeA = document.getElementById('includeA');
+        const includeB = document.getElementById('includeB');
+        const includeC = document.getElementById('includeC');
+        if (includeA) document.getElementById('paramA').disabled = !includeA.checked;
+        if (includeB) document.getElementById('paramB').disabled = !includeB.checked;
+        if (includeC) document.getElementById('paramC').disabled = !includeC.checked;
     }
 
     editValue(span) {
