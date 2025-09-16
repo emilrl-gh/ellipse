@@ -17,7 +17,7 @@
             <div class="nav-buttons nav-responsive">
                 <button id="visualizer-btn" class="nav-btn active">Visualizer</button>
                 <button id="quiz-btn" class="nav-btn">Quiz Mode</button>
-                <button id="cheat-sheet-btn-header" class="nav-btn cheat-sheet-nav">📋 Cheat Sheet</button>
+                <button id="cheat-sheet-btn-header" class="nav-btn cheat-sheet-nav" data-simple-event="open_cheatsheet" data-simple-event-meta='{"source":"header"}'>📋 Cheat Sheet</button>
             </div>
         </header>
 
@@ -83,7 +83,7 @@
         <div id="quiz-page" class="page-content hidden">
             <div class="quiz-content">
                 <div class="quiz-header">
-                    <button id="cheat-sheet-btn-quiz" class="cheat-sheet-quiz-btn">📋 Need Help? View Cheat Sheet</button>
+                    <button id="cheat-sheet-btn-quiz" class="cheat-sheet-quiz-btn" data-simple-event="open_cheatsheet" data-simple-event-meta='{"source":"quiz"}'>📋 Need Help? View Cheat Sheet</button>
                 </div>
 
                 <div class="quiz-card">
@@ -124,6 +124,8 @@
                 </div>
             </div>
         </div>
+
+        
 
         <!-- Cheat Sheet Modal -->
         <div id="cheat-sheet-modal" class="modal hidden">
@@ -190,7 +192,6 @@
             </div>
         </div>
     </div>
-
     <script src="script.js"></script>
     <script src="quiz.js"></script>
 </body>

@@ -40,6 +40,7 @@ class QuadricSurfaceVisualizer {
         });
 
         document.getElementById('cheat-sheet-btn-header').addEventListener('click', () => {
+            try { window.sa_event && window.sa_event('open_cheatsheet', { source: 'header' }); } catch (e) {}
             document.getElementById('cheat-sheet-modal').classList.remove('hidden');
         });
 
@@ -616,3 +617,121 @@ class QuadricSurfaceVisualizer {
 document.addEventListener('DOMContentLoaded', () => {
     new QuadricSurfaceVisualizer();
 });
+
+// Simple analytics event helper (sa_event)
+// Provides a safe global function to record events and a small inline helper
+// that maps elements with `data-simple-event` to calls to `sa_event(name, meta)`.
+// This will not overwrite an existing `sa_event` if one is already provided by
+// a third-party analytics script.
+(function () {
+    // Don't overwrite if the analytics script already defines sa_event
+    if (window.sa_event) return;
+
+    window._sa_queue = window._sa_queue || [];
+
+    function isPlainObject(val) {
+        return val && typeof val === 'object' && !Array.isArray(val);
+    }
+
+    function tryFlushQueue() {
+        // If a third-party analytics function exists, try to forward queued events.
+        // Commonly analytics libraries expose a `sa` or `sa_event` function; try both.
+        const forward = (typeof window.sa === 'function') ? window.sa : (typeof window.__sa_event_forward === 'function' ? window.__sa_event_forward : null);
+        if (!forward) return false;
+
+        while (window._sa_queue.length) {
+            const ev = window._sa_queue.shift();
+            try {
+                forward(ev.name, ev.metadata);
+            } catch (e) {
+                // If forwarding fails, put it back and stop trying for now
+                window._sa_queue.unshift(ev);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // Expose sa_event globally
+    window.sa_event = function (name, metadata) {
+        try {
+            if (typeof name !== 'string' || !name.trim()) {
+                console.warn('sa_event: invalid event name', name);
+                return false;
+            }
+
+            if (metadata != null && !isPlainObject(metadata)) {
+                // Allow JSON strings too
+                if (typeof metadata === 'string') {
+                    try {
+                        metadata = JSON.parse(metadata);
+                    } catch (e) {
+                        console.warn('sa_event: metadata must be an object or JSON string', metadata);
+                        metadata = { value: metadata };
+                    }
+                } else {
+                    metadata = { value: metadata };
+                }
+            }
+
+            const event = { name: name.trim(), metadata: metadata || null, ts: Date.now() };
+
+            // If a forwarding function exists now, send immediately
+            if (typeof window.sa === 'function') {
+                try {
+                    window.sa(event.name, event.metadata);
+                    return true;
+                } catch (e) {
+                    // fallthrough to queue
+                }
+            }
+
+            // Otherwise queue the event for later flushing
+            window._sa_queue.push(event);
+
+            return true;
+        } catch (e) {
+            console.error('sa_event error', e);
+            return false;
+        }
+    };
+
+    // Periodically attempt to flush the queue in case the analytics lib loads later
+    let checks = 0;
+    const maxChecks = 20; // ~10s with 500ms interval
+    const intervalId = setInterval(() => {
+        checks += 1;
+        if (tryFlushQueue() || checks >= maxChecks) {
+            clearInterval(intervalId);
+        }
+    }, 500);
+
+    // Inline events helper: delegate click events from elements with data-simple-event
+    document.addEventListener('click', (e) => {
+        const el = e.target.closest && e.target.closest('[data-simple-event]');
+        if (!el) return;
+
+        const name = el.getAttribute('data-simple-event');
+        if (!name) return;
+
+        let meta = null;
+        const metaAttr = el.getAttribute('data-simple-event-meta');
+        if (metaAttr) {
+            try {
+                meta = JSON.parse(metaAttr);
+            } catch (err) {
+                // fallback: store raw string
+                meta = { value: metaAttr };
+            }
+        }
+
+        try {
+            window.sa_event(name, meta);
+        } catch (err) {
+            console.warn('sa_event call failed', err);
+        }
+    });
+})();
+
+// removed sa_event modal handlers

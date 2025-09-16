@@ -47,6 +47,7 @@ class QuadricSurfaceQuiz {
         });
 
         document.getElementById('cheat-sheet-btn-quiz').addEventListener('click', () => {
+            try { window.sa_event && window.sa_event('open_cheatsheet', { source: 'quiz' }); } catch (e) {}
             document.getElementById('cheat-sheet-modal').classList.remove('hidden');
         });
     }
