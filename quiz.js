@@ -513,6 +513,27 @@ class QuadricSurfaceQuiz {
                     }
                 }
             }
+        } else if (Math.abs(C) < 0.001 && A > 0 && B > 0 && D < 0) {
+            // Elliptic cylinder parametric surface (C = 0)
+            for (let i = 0; i <= resolution; i++) {
+                for (let j = 0; j <= resolution; j++) {
+                    const theta = (i / resolution) * 2 * Math.PI;
+                    const t = ((j / resolution) - 0.5) * 4; // Height parameter
+
+                    try {
+                        const a = Math.sqrt(-D / A);
+                        const b = Math.sqrt(-D / B);
+
+                        x[i][j] = a * Math.cos(theta);
+                        y[i][j] = b * Math.sin(theta);
+                        z[i][j] = t;
+                    } catch (e) {
+                        x[i][j] = 0;
+                        y[i][j] = 0;
+                        z[i][j] = 0;
+                    }
+                }
+            }
         } else {
             // General implicit surface (solve for z)
             for (let i = 0; i <= resolution; i++) {
@@ -531,12 +552,7 @@ class QuadricSurfaceQuiz {
                             z[i][j] = NaN;
                         }
                     } else {
-                        // Handle cylinder case (C = 0)
-                        if (Math.abs(A * u * u + B * v * v + D) < 0.1) {
-                            z[i][j] = ((j / resolution) - 0.5) * 3;
-                        } else {
-                            z[i][j] = NaN;
-                        }
+                        z[i][j] = NaN;
                     }
                 }
             }
