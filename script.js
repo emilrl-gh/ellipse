@@ -95,30 +95,42 @@ class QuadricSurfaceVisualizer {
 
     updateEquationDisplay() {
         const { A, B, C, D } = this.params;
+
+        // If include toggles exist and are unchecked, force showing 0x²/0y²/0z²
+        const includeA = document.getElementById('includeA');
+        const includeB = document.getElementById('includeB');
+        const includeC = document.getElementById('includeC');
+        const forceZeroA = includeA ? !includeA.checked : false;
+        const forceZeroB = includeB ? !includeB.checked : false;
+        const forceZeroC = includeC ? !includeC.checked : false;
+
         const formatCoeff = (coeff) => {
             if (coeff === 1) return '';
             if (coeff === -1) return '-';
             return coeff.toString();
         };
 
-        const formatTerm = (coeff, variable) => {
+        const formatTerm = (coeff, variable, forceZero) => {
+            if (forceZero) return `0${variable}²`;
             if (coeff === 0) return '';
             const coeffStr = formatCoeff(coeff);
             return `${coeffStr}${variable}²`;
         };
 
         let equation = '';
-        const termA = formatTerm(A, 'x');
-        const termB = formatTerm(B, 'y');
-        const termC = formatTerm(C, 'z');
+        const termA = formatTerm(A, 'x', forceZeroA);
+        const termB = formatTerm(B, 'y', forceZeroB);
+        const termC = formatTerm(C, 'z', forceZeroC);
 
         if (termA) equation += termA;
         if (termB) {
-            if (equation && B > 0) equation += ' + ';
+            if (equation && (!forceZeroB && B > 0)) equation += ' + ';
+            else if (equation && forceZeroB) equation += ' + ';
             equation += termB;
         }
         if (termC) {
-            if (equation && C > 0) equation += ' + ';
+            if (equation && (!forceZeroC && C > 0)) equation += ' + ';
+            else if (equation && forceZeroC) equation += ' + ';
             equation += termC;
         }
 
