@@ -226,6 +226,47 @@ class QuadricSurfaceVisualizer {
                     }
                 }
             }
+        } else if (this.isTwoSheetHyperboloid()) {
+            // Two-sheet hyperboloid parametric surface
+            for (let i = 0; i <= resolution; i++) {
+                for (let j = 0; j <= resolution; j++) {
+                    const phi = (i / resolution) * 2 * Math.PI;
+                    const t = ((j / resolution) - 0.5) * 4; // Parameter range
+
+                    try {
+                        // For x²/a² + y²/b² - z²/c² = 1 form (D > 0 case)
+                        if (A > 0 && B > 0 && C > 0 && D > 0) {
+                            const a = Math.sqrt(D / A);
+                            const b = Math.sqrt(D / B);
+                            const c = Math.sqrt(D / C);
+
+                            // Generate both sheets by using ±sqrt(1 + t²) for the hyperbolic part
+                            const hyperFactor = Math.sqrt(1 + t * t);
+
+                            if (j < resolution / 2) {
+                                // Upper sheet
+                                x[i][j] = a * hyperFactor * Math.cos(phi);
+                                y[i][j] = b * hyperFactor * Math.sin(phi);
+                                z[i][j] = c * (1 + Math.abs(t));
+                            } else {
+                                // Lower sheet
+                                x[i][j] = a * hyperFactor * Math.cos(phi);
+                                y[i][j] = b * hyperFactor * Math.sin(phi);
+                                z[i][j] = -c * (1 + Math.abs(t));
+                            }
+                        } else {
+                            // Handle other two-sheet cases
+                            x[i][j] = 0;
+                            y[i][j] = 0;
+                            z[i][j] = 0;
+                        }
+                    } catch (e) {
+                        x[i][j] = 0;
+                        y[i][j] = 0;
+                        z[i][j] = 0;
+                    }
+                }
+            }
         } else if (this.isCone() && Math.abs(D) < 0.1) {
             // Cone parametric surface
             for (let i = 0; i <= resolution; i++) {

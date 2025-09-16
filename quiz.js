@@ -495,6 +495,46 @@ class QuadricSurfaceQuiz {
                     }
                 }
             }
+        } else if (this.isQuizTwoSheetHyperboloid(A, B, C, D)) {
+            // Two-sheet hyperboloid parametric surface
+            for (let i = 0; i <= resolution; i++) {
+                for (let j = 0; j <= resolution; j++) {
+                    const phi = (i / resolution) * 2 * Math.PI;
+                    const t = ((j / resolution) - 0.5) * 3; // Parameter range
+
+                    try {
+                        // For x²/a² + y²/b² - z²/c² = 1 form (D > 0 case)
+                        if (A > 0 && B > 0 && C > 0 && D > 0) {
+                            const a = Math.sqrt(D / A);
+                            const b = Math.sqrt(D / B);
+                            const c = Math.sqrt(D / C);
+
+                            // Generate both sheets
+                            const hyperFactor = Math.sqrt(1 + t * t);
+
+                            if (j < resolution / 2) {
+                                // Upper sheet
+                                x[i][j] = a * hyperFactor * Math.cos(phi);
+                                y[i][j] = b * hyperFactor * Math.sin(phi);
+                                z[i][j] = c * (1 + Math.abs(t));
+                            } else {
+                                // Lower sheet
+                                x[i][j] = a * hyperFactor * Math.cos(phi);
+                                y[i][j] = b * hyperFactor * Math.sin(phi);
+                                z[i][j] = -c * (1 + Math.abs(t));
+                            }
+                        } else {
+                            x[i][j] = 0;
+                            y[i][j] = 0;
+                            z[i][j] = 0;
+                        }
+                    } catch (e) {
+                        x[i][j] = 0;
+                        y[i][j] = 0;
+                        z[i][j] = 0;
+                    }
+                }
+            }
         } else if (this.isQuizCone(A, B, C, D) && Math.abs(D) < 0.1) {
             // Cone parametric surface
             for (let i = 0; i <= resolution; i++) {
@@ -573,6 +613,13 @@ class QuadricSurfaceQuiz {
         return (A > 0 && B > 0 && C < 0 && D < 0) ||
                (A > 0 && C > 0 && B < 0 && D < 0) ||
                (B > 0 && C > 0 && A < 0 && D < 0);
+    }
+
+    isQuizTwoSheetHyperboloid(A, B, C, D) {
+        return (A > 0 && B > 0 && C > 0 && D > 0) ||
+               (A < 0 && B < 0 && C > 0 && D < 0) ||
+               (A < 0 && C < 0 && B > 0 && D < 0) ||
+               (B < 0 && C < 0 && A > 0 && D < 0);
     }
 
     isQuizCone(A, B, C, D) {
